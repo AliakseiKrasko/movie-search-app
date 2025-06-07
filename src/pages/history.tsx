@@ -96,7 +96,7 @@ export default function History() {
     };
 
     return (
-        <Layout>
+        <>
             <Head>
                 <title>История просмотров - Movie App</title>
                 <meta name="description" content="История просмотренных фильмов" />
@@ -212,6 +212,6 @@ export default function History() {
                     </div>
                 )}
             </div>
-        </Layout>
+        </>
     );
 }

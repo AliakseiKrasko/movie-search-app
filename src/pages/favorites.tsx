@@ -70,7 +70,7 @@ export default function Favorites() {
     };
 
     return (
-        <Layout>
+        <>
             <Head>
                 <title>Избранное - Movie App</title>
                 <meta name="description" content="Ваши избранные фильмы" />
@@ -172,6 +172,6 @@ export default function Favorites() {
                     </div>
                 )}
             </div>
-        </Layout>
+        </>
     );
 }

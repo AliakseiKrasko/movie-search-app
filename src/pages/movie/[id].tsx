@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Layout from '../../components/Layout/Layout';
 import { Movie } from '@/types/movie';
 import { tmdbService } from '@/services/tmdb';
 import { addToFavorites, removeFromFavorites } from '@/store/slices/favoritesSlice';
@@ -49,7 +48,7 @@ export default function MovieDetail({ movie, error }: MovieDetailProps) {
 
     if (error) {
         return (
-            <Layout>
+            <>
                 <Head>
                     <title>Ошибка - Movie App</title>
                 </Head>
@@ -60,13 +59,13 @@ export default function MovieDetail({ movie, error }: MovieDetailProps) {
                         Назад
                     </button>
                 </div>
-            </Layout>
+         </>
         );
     }
 
     if (!movie) {
         return (
-            <Layout>
+            <>
                 <Head>
                     <title>Фильм не найден - Movie App</title>
                 </Head>
@@ -76,12 +75,12 @@ export default function MovieDetail({ movie, error }: MovieDetailProps) {
                         Назад
                     </button>
                 </div>
-            </Layout>
+            </>
         );
     }
 
     return (
-        <Layout>
+        <>
             <Head>
                 <title>{movie.title} - Movie App</title>
                 <meta name="description" content={movie.overview} />
@@ -174,7 +173,7 @@ export default function MovieDetail({ movie, error }: MovieDetailProps) {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </>
     );
 }
 
