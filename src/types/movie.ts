@@ -85,8 +85,9 @@ export interface Review {
 
 export interface SearchFilters {
     type: 'all' | 'movie' | 'tv';
-    sortBy: 'popularity.desc' | 'release_date.desc' | 'vote_average.desc';
+    sortBy: string;
     year?: number;
+    query?: string;
 }
 
 export interface SearchHistory {
