@@ -5,14 +5,16 @@ import { addToFavorites, removeFromFavorites } from '@/store/slices/favoritesSli
 import { Movie } from '@/types/movie';
 import styles from './MovieCard.module.scss';
 
-interface MovieCardProps {
+export interface MovieCardProps {
     movie: Movie;
+    isFavorite?: boolean;
+    onToggleFavorite?: () => void;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     const dispatch = useDispatch();
     const favorites = useSelector((state: RootState) => state.favorites.favorites);
-    const isFavorite = favorites.some(fav => fav.id === movie.id);
+    const isFavorite = favorites.some((fav: Movie) => fav.id === movie.id);
 
     const handleFavorite = (e: React.MouseEvent) => {
         e.preventDefault();

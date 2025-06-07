@@ -2,13 +2,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { RootState } from '@/store';
 import styles from './Header.module.scss';
 
 const Header = () => {
     const router = useRouter();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const favorites = useSelector((state: RootState) => state.favorites.favorites);
+    const favorites = useSelector((state: RootState) => state.favorites.items) || [];
 
     const navItems = [
         { href: '/', label: 'Поиск', icon: '🔍' },

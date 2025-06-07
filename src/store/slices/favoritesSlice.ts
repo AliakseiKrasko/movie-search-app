@@ -1,12 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Movie } from '../../types/movie';
+import { Movie } from '@/types/movie';
 
-interface FavoritesState {
+export interface FavoriteItem extends Movie {
+    dateAdded: string;
+}
+
+export interface FavoritesState {
+    items: FavoriteItem[];
     favorites: Movie[];
 }
 
 const initialState: FavoritesState = {
-    favorites: []
+    items: [],
+    favorites: [],
 };
 
 const favoritesSlice = createSlice({
@@ -14,19 +20,36 @@ const favoritesSlice = createSlice({
     initialState,
     reducers: {
         addToFavorites: (state, action: PayloadAction<Movie>) => {
-            const exists = state.favorites.find(movie => movie.id === action.payload.id);
-            if (!exists) {
-                state.favorites.push(action.payload);
+            const existingIndex = state.items.findIndex(item => item.id === action.payload.id);
+
+            if (existingIndex === -1) {
+                state.items.push({
+                    ...action.payload,
+                    dateAdded: new Date().toISOString(),
+                });
             }
         },
+
         removeFromFavorites: (state, action: PayloadAction<number>) => {
-            state.favorites = state.favorites.filter(movie => movie.id !== action.payload);
+            state.items = state.items.filter(item => item.id !== action.payload);
         },
-        setFavorites: (state, action: PayloadAction<Movie[]>) => {
-            state.favorites = action.payload;
-        }
-    }
+
+        clearFavorites: (state) => {
+            state.items = [];
+        },
+
+        // Действие для загрузки избранного из localStorage (будет использовано middleware или при инициализации)
+        loadFavorites: (state, action: PayloadAction<FavoriteItem[]>) => {
+            state.items = action.payload;
+        },
+    },
 });
 
-export const { addToFavorites, removeFromFavorites, setFavorites } = favoritesSlice.actions;
+export const {
+    addToFavorites,
+    removeFromFavorites,
+    clearFavorites,
+    loadFavorites,
+} = favoritesSlice.actions;
+
 export default favoritesSlice.reducer;

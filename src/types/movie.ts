@@ -1,34 +1,3 @@
-export interface Movie {
-    id: number;
-    title?: string;
-    name?: string;
-    overview: string;
-    poster_path: string | null;
-    backdrop_path: string | null;
-    release_date?: string;
-    first_air_date?: string;
-    vote_average: number;
-    vote_count: number;
-    genre_ids: number[];
-    media_type?: 'movie' | 'tv';
-    adult?: boolean;
-    original_language: string;
-    popularity: number;
-}
-
-export interface MovieDetails extends Movie {
-    genres: Genre[];
-    runtime?: number;
-    number_of_seasons?: number;
-    number_of_episodes?: number;
-    status: string;
-    tagline: string;
-    homepage: string;
-    production_companies: ProductionCompany[];
-    production_countries: ProductionCountry[];
-    spoken_languages: SpokenLanguage[];
-}
-
 export interface Genre {
     id: number;
     name: string;
@@ -36,8 +5,8 @@ export interface Genre {
 
 export interface ProductionCompany {
     id: number;
-    logo_path: string | null;
     name: string;
+    logo_path?: string;
     origin_country: string;
 }
 
@@ -52,12 +21,42 @@ export interface SpokenLanguage {
     name: string;
 }
 
+
+export interface Movie {
+    id: number;
+    title: string;
+    original_title: string;
+    overview: string;
+    poster_path: string | null;
+    backdrop_path: string | null;
+    release_date: string;
+    vote_average: number;
+    vote_count: number;
+    popularity: number;
+    adult: boolean;
+    video: boolean;
+    original_language: string;
+    genre_ids?: number[]; // Для результатов поиска
+    genres?: Genre[]; // Для детальной информации
+    runtime?: number; // Только в детальной информации
+    production_companies?: ProductionCompany[];
+    production_countries?: ProductionCountry[];
+    spoken_languages?: SpokenLanguage[];
+    budget?: number;
+    revenue?: number;
+    homepage?: string;
+    imdb_id?: string;
+    status?: string;
+    tagline?: string;
+    name?: string;
+    first_air_date?: string;
+}
+
 export interface Cast {
     id: number;
     name: string;
     character: string;
     profile_path: string | null;
-    order: number;
 }
 
 export interface Video {
@@ -66,33 +65,58 @@ export interface Video {
     name: string;
     site: string;
     type: string;
-    official: boolean;
 }
 
 export interface Review {
     id: string;
     author: string;
-    author_details: {
-        name: string;
-        username: string;
-        avatar_path: string | null;
-        rating: number | null;
-    };
     content: string;
-    created_at: string;
-    updated_at: string;
+    url: string;
+}
+
+export interface MovieDetails extends Movie {
+    // Расширенные поля для детальной информации о фильме
+    budget?: number;
+    revenue?: number;
+    genres?: Genre[];
+    production_companies?: ProductionCompany[];
+    production_countries?: ProductionCountry[];
+    spoken_languages?: SpokenLanguage[];
+    homepage?: string;
+    imdb_id?: string;
+    status?: string;
+    tagline?: string;
 }
 
 export interface SearchFilters {
-    type: 'all' | 'movie' | 'tv';
-    sortBy: string;
+    type?: 'movie' | 'tv' | 'all';
     year?: number;
+    sortBy?: string;
     query?: string;
 }
 
-export interface SearchHistory {
-    id: string;
+export interface MovieResponse {
+    page: number;
+    results: Movie[];
+    total_pages: number;
+    total_results: number;
+}
+
+export interface MovieSearchParams {
     query: string;
-    timestamp: number;
-    resultsCount: number;
+    page?: number;
+    year?: number;
+    primary_release_year?: number;
+    region?: string;
+    include_adult?: boolean;
+}
+
+export interface MovieFilters {
+    genre?: number;
+    year?: number;
+    rating?: {
+        min: number;
+        max: number;
+    };
+    sortBy?: 'popularity.desc' | 'popularity.asc' | 'release_date.desc' | 'release_date.asc' | 'vote_average.desc' | 'vote_average.asc' | 'title.asc' | 'title.desc';
 }

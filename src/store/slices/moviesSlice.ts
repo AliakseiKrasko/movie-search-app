@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Movie, MovieDetails, Cast, Video, Review, SearchFilters } from '../../types/movie';
-import { tmdbService } from '../../services/tmdb';
+import { Movie, MovieDetails, Cast, Video, Review, SearchFilters } from '@/types/movie';
+import { tmdbService } from '@/services/tmdb';
 
 interface MoviesState {
     searchResults: Movie[];
@@ -42,13 +42,13 @@ export const searchMovies = createAsyncThunk(
 
         switch (filters.type) {
             case 'movie':
-                response = await tmdbService.searchMovies(query, page, filters.year);
+                response = await tmdbService.searchMovies({ query, page, year: filters.year });
                 break;
             case 'tv':
-                response = await tmdbService.searchTV(query, page, filters.year);
+                response = await tmdbService.searchTV({ query, page, year: filters.year });
                 break;
             default:
-                response = await tmdbService.searchMulti(query, page);
+                response = await tmdbService.searchMulti({ query, page });
         }
 
         return response;

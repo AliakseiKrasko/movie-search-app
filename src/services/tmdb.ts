@@ -1,101 +1,192 @@
-const API_KEY = process.env.TMDB_API_KEY;
-const BASE_URL = process.env.NEXT_PUBLIC_TMDB_BASE_URL;
+import {Movie, MovieResponse, MovieSearchParams, Genre, MovieDetails} from '@/types/movie';
+
+const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const BASE_URL = 'https://api.themoviedb.org/3';
+
+if (!API_KEY) {
+    throw new Error('TMDB API key is not configured');
+}
 
 class TMDBService {
-    private async fetchFromAPI(endpoint: string, params: Record<string, any> = {}) {
+    private async fetchFromAPI<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
         const url = new URL(`${BASE_URL}${endpoint}`);
+
+        // Добавляем API ключ
         url.searchParams.append('api_key', API_KEY!);
 
+        // Добавляем параметры
         Object.entries(params).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
-                url.searchParams.append(key, value.toString());
+                url.searchParams.append(key, String(value));
             }
         });
 
         const response = await fetch(url.toString());
+
         if (!response.ok) {
-            throw new Error(`TMDB API Error: ${response.status}`);
+            throw new Error(`TMDB API error: ${response.status} ${response.statusText}`);
         }
 
         return response.json();
     }
 
-    async searchMulti(query: string, page: number = 1) {
-        return this.fetchFromAPI('/search/multi', { query, page });
+    async searchMovies(params: MovieSearchParams): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/search/movie', {
+            query: params.query,
+            page: params.page || 1,
+            year: params.year,
+            primary_release_year: params.primary_release_year,
+            region: params.region,
+            include_adult: params.include_adult || false,
+            language: 'ru-RU',
+        });
     }
 
-    async searchMovies(query: string, page: number = 1, year?: number) {
-        const params: any = { query, page };
-        if (year) params.year = year;
-        return this.fetchFromAPI('/search/movie', params);
+
+    async getPopularMovies(page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/movie/popular', {
+            page,
+            language: 'ru-RU',
+        });
+    }
+    async getTVDetails(id: number): Promise<MovieDetails> {
+        return this.fetchFromAPI<MovieDetails>(`/tv/${id}`, {
+            language: 'ru-RU',
+        });
+    }
+    async getMovieDetails(id: number): Promise<MovieDetails> {
+        return this.fetchFromAPI<MovieDetails>(`/movie/${id}`, {
+            language: 'ru-RU',
+        });
     }
 
-    async searchTV(query: string, page: number = 1, year?: number) {
-        const params: any = { query, page };
-        if (year) params.first_air_date_year = year;
-        return this.fetchFromAPI('/search/tv', params);
+    async getMovieCredits(id: number): Promise<any> {
+        return this.fetchFromAPI(`/movie/${id}/credits`, { language: 'ru-RU' });
     }
 
-    async getMovieDetails(id: number) {
-        return this.fetchFromAPI(`/movie/${id}`);
+    async getMovieVideos(id: number): Promise<any> {
+        return this.fetchFromAPI(`/movie/${id}/videos`, { language: 'ru-RU' });
     }
 
-    async getTVDetails(id: number) {
-        return this.fetchFromAPI(`/tv/${id}`);
+    async getMovieReviews(id: number): Promise<any> {
+        return this.fetchFromAPI(`/movie/${id}/reviews`, { language: 'ru-RU' });
     }
 
-    async getMovieCredits(id: number) {
-        return this.fetchFromAPI(`/movie/${id}/credits`);
+
+    async getTVCredits(id: number): Promise<any> {
+        return this.fetchFromAPI(`/tv/${id}/credits`, { language: 'ru-RU' });
+    }
+    async getSimilarTV(id: number): Promise<any> {
+        return this.fetchFromAPI(`/tv/${id}/similar`, { language: 'ru-RU' });
     }
 
-    async getTVCredits(id: number) {
-        return this.fetchFromAPI(`/tv/${id}/credits`);
+    async getTVVideos(id: number): Promise<any> {
+        return this.fetchFromAPI(`/tv/${id}/videos`, { language: 'ru-RU' });
     }
 
-    async getMovieVideos(id: number) {
-        return this.fetchFromAPI(`/movie/${id}/videos`);
+    async getTVReviews(id: number): Promise<any> {
+        return this.fetchFromAPI(`/tv/${id}/reviews`, { language: 'ru-RU' });
     }
 
-    async getTVVideos(id: number) {
-        return this.fetchFromAPI(`/tv/${id}/videos`);
+    async getTopRatedMovies(page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/movie/top_rated', {
+            page,
+            language: 'ru-RU',
+        });
     }
 
-    async getMovieReviews(id: number, page: number = 1) {
-        return this.fetchFromAPI(`/movie/${id}/reviews`, { page });
+    async getNowPlayingMovies(page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/movie/now_playing', {
+            page,
+            language: 'ru-RU',
+        });
     }
 
-    async getTVReviews(id: number, page: number = 1) {
-        return this.fetchFromAPI(`/tv/${id}/reviews`, { page });
+    async getUpcomingMovies(page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/movie/upcoming', {
+            page,
+            language: 'ru-RU',
+        });
     }
 
-    async getSimilarMovies(id: number, page: number = 1) {
-        return this.fetchFromAPI(`/movie/${id}/similar`, { page });
+    async getMovieById(id: number): Promise<Movie> {
+        return this.fetchFromAPI<Movie>(`/movie/${id}`, {
+            language: 'ru-RU',
+        });
     }
 
-    async getSimilarTV(id: number, page: number = 1) {
-        return this.fetchFromAPI(`/tv/${id}/similar`, { page });
+    async searchTV(params: MovieSearchParams): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/search/tv', {
+            query: params.query,
+            page: params.page || 1,
+            year: params.year,
+            language: 'ru-RU',
+        });
     }
 
-    async getGenres() {
-        const [movieGenres, tvGenres] = await Promise.all([
-            this.fetchFromAPI('/genre/movie/list'),
-            this.fetchFromAPI('/genre/tv/list')
-        ]);
-
-        return {
-            movie: movieGenres.genres,
-            tv: tvGenres.genres
-        };
+    async getMoviesByGenre(genreId: number, page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/discover/movie', {
+            with_genres: genreId,
+            page,
+            language: 'ru-RU',
+            sort_by: 'popularity.desc',
+        });
     }
 
-    getImageUrl(path: string | null, size: string = 'w500') {
-        if (!path) return '/placeholder-image.jpg';
-        return `${process.env.NEXT_PUBLIC_TMDB_IMAGE_BASE_URL?.replace('w500', size)}${path}`;
+    async getGenres(): Promise<{ genres: Genre[] }> {
+        return this.fetchFromAPI<{ genres: Genre[] }>('/genre/movie/list', {
+            language: 'ru-RU',
+        });
     }
 
-    getYouTubeUrl(key: string) {
-        return `https://www.youtube.com/watch?v=${key}`;
+    async discoverMovies(params: {
+        page?: number;
+        sort_by?: string;
+        with_genres?: string;
+        primary_release_year?: number;
+        'vote_average.gte'?: number;
+        'vote_average.lte'?: number;
+    } = {}): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>('/discover/movie', {
+            ...params,
+            language: 'ru-RU',
+            page: params.page || 1,
+        });
+    }
+
+    async getSimilarMovies(movieId: number, page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>(`/movie/${movieId}/similar`, {
+            page,
+            language: 'ru-RU',
+        });
+    }
+
+    async searchMulti(params: MovieSearchParams): Promise<any> {
+        return this.fetchFromAPI('/search/multi', {
+            query: params.query,
+            page: params.page || 1,
+            language: 'ru-RU',
+        });
+    }
+
+    async getMovieRecommendations(movieId: number, page: number = 1): Promise<MovieResponse> {
+        return this.fetchFromAPI<MovieResponse>(`/movie/${movieId}/recommendations`, {
+            page,
+            language: 'ru-RU',
+        });
+    }
+
+    // Утилитарные методы
+    getImageUrl(path: string | null, size: 'w200' | 'w300' | 'w400' | 'w500' | 'w780' | 'original' = 'w500'): string {
+        if (!path) return '/placeholder-movie.jpg';
+        return `https://image.tmdb.org/t/p/${size}${path}`;
+    }
+
+    getBackdropUrl(path: string | null, size: 'w300' | 'w780' | 'w1280' | 'original' = 'w1280'): string {
+        if (!path) return '/placeholder-backdrop.jpg';
+        return `https://image.tmdb.org/t/p/${size}${path}`;
     }
 }
 
 export const tmdbService = new TMDBService();
+export default tmdbService;
