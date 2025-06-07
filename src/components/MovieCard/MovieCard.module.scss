@@ -2,6 +2,10 @@
 
 .card {
   display: block;
+  width: 480px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 auto;
   background: $bg-card;
   border: 1px solid $border;
   border-radius: $radius-lg;
@@ -23,6 +27,8 @@
 
 .imageWrapper {
   position: relative;
+  height: 270px;
+  min-height: 0;
   aspect-ratio: 2/3;
   overflow: hidden;
   background: $bg-secondary;
@@ -153,6 +159,7 @@
   color: $text-secondary;
   line-height: 1.4;
   margin: 0;
+  max-height: 2.9em;
 }
 
 @keyframes spin {

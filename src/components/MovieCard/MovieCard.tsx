@@ -12,6 +12,7 @@ export interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+    if (!movie.poster_path) return null;
     const dispatch = useDispatch();
     const favorites = useSelector((state: RootState) => state.favorites.favorites);
     const isFavorite = favorites.some((fav: Movie) => fav.id === movie.id);
