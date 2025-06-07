@@ -35,10 +35,16 @@ export default function Favorites() {
 
             switch (sortBy) {
                 case 'title':
-                    comparison = a.title.localeCompare(b.title);
+                    // Проверяем наличие title у обоих объектов
+                    const titleA = a.title || a.name || '';
+                    const titleB = b.title || b.name || '';
+                    comparison = titleA.localeCompare(titleB);
                     break;
                 case 'rating':
-                    comparison = a.vote_average - b.vote_average;
+                    // Проверяем наличие vote_average
+                    const ratingA = a.vote_average || 0;
+                    const ratingB = b.vote_average || 0;
+                    comparison = ratingA - ratingB;
                     break;
                 case 'date_added':
                 default:
