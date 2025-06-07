@@ -1,5 +1,5 @@
 .container {
-  max-width: 1200px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -30,7 +30,7 @@
 }
 
 .stats {
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -68,6 +68,7 @@
   flex-direction: column;
   gap: 8px;
 
+
   label {
     font-weight: 600;
     color: var(--text-primary);
@@ -79,7 +80,7 @@
   padding: 10px 16px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  background: white;
+  background: #4b5563;
   color: var(--text-primary);
   font-size: 14px;
   cursor: pointer;
@@ -121,8 +122,8 @@
   padding: 20px;
   background: var(--background-light);
   border-radius: 12px;
-  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+  border: 1px solid white;
 
   &:hover {
     transform: translateY(-2px);

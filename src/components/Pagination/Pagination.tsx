@@ -12,17 +12,17 @@ interface PaginationProps {
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.movies.loading);
-    const currentQuery = useSelector((state: RootState) => state.search.currentQuery);
+    const currentQuery = useSelector((state: RootState) => state.search.query);
     const filters = useSelector((state: RootState) => state.movies.filters);
 
     const handlePageChange = (page: number) => {
-        if (page === currentPage || loading || !currentQuery) return;
+        if (page === currentPage || loading) return;
         // Если onPageChange передали — вызываем его, иначе выполняем свой пагинатор
         if (onPageChange) {
             onPageChange(page);
         } else {
             dispatch(searchMovies({
-                query: currentQuery,
+                query: currentQuery || '',
                 page,
                 filters
             }));

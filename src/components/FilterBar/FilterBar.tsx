@@ -20,6 +20,14 @@ const sortOptions = [
     { value: 'release_date.asc', label: 'По дате (старые)' },
 ];
 
+const yearOptions = [
+    { value: '', label: 'Все годы' },
+    ...Array.from({ length: new Date().getFullYear() - 1899 }, (_, i) => {
+        const year = new Date().getFullYear() - i;
+        return { value: year.toString(), label: year.toString() };
+    })
+];
+
 const FilterBar: React.FC<FilterBarProps> = ({ filters, onChange }) => {
     return (
         <div className={styles.filterBar}>
@@ -55,18 +63,20 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onChange }) => {
             </div>
             <div className={styles.group}>
                 <label htmlFor="year" className={styles.label}>Год:</label>
-                <input
-                    id="year"
-                    className={styles.input}
-                    type="number"
-                    min="1900"
-                    max={new Date().getFullYear()}
-                    placeholder="Год"
-                    value={filters.year || ''}
-                    onChange={e => onChange({ year: e.target.value ? Number(e.target.value) : undefined })}
-                />
+                    <select
+                        id="year"
+                        className={styles.select}
+                        value={filters.year || ''}
+                        onChange={e => onChange({ year: e.target.value ? Number(e.target.value) : undefined })}
+                    >
+                        {yearOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
-        </div>
     );
 };
 
