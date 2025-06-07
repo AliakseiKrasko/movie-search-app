@@ -1,0 +1,50 @@
+@import '../../styles/variables';
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  margin: $spacing-2xl 0;
+  flex-wrap: wrap;
+}
+
+.pages {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.pageButton {
+  padding: $spacing-sm $spacing-md;
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  color: $text-secondary;
+  font-size: 0.875rem;
+  transition: all $transition-fast;
+  min-width: 40px;
+
+  &:hover:not(:disabled) {
+    background: $bg-hover;
+    border-color: $border-light;
+    color: $text-primary;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.active {
+    background: $accent-primary;
+    border-color: $accent-primary;
+    color: white;
+  }
+}
+
+.dots {
+  padding: $spacing-sm;
+  color: $text-muted;
+  font-size: 0.875rem;
+}

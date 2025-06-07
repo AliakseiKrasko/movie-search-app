@@ -1,0 +1,13 @@
+@import '../../styles/variables';
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding-top: $spacing-xl;
+  padding-bottom: $spacing-2xl;
+}
